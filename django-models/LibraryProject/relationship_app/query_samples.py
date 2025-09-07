@@ -6,7 +6,12 @@ django.setup()
 
 from relationship_app.models import Author, Book, Library, Librarian
 
-# Create sample data
+# Create sample data for a clean run
+Author.objects.all().delete()
+Book.objects.all().delete()
+Library.objects.all().delete()
+Librarian.objects.all().delete()
+
 author1 = Author.objects.create(name="J.K. Rowling")
 author2 = Author.objects.create(name="Stephen King")
 
@@ -26,10 +31,14 @@ librarian2 = Librarian.objects.create(name="Bob", library=library2)
 
 # Query all books by a specific author
 author_name = "Stephen King"
-books_by_author = Book.objects.filter(author__name=author_name)
-print(f"Books by {author_name}:")
-for book in books_by_author:
-    print(f"- {book.title}")
+try:
+    author = Author.objects.get(name=author_name)
+    books_by_author = Book.objects.filter(author=author)
+    print(f"Books by {author_name}:")
+    for book in books_by_author:
+        print(f"- {book.title}")
+except Author.DoesNotExist:
+    print(f"Author '{author_name}' not found.")
 
 # List all books in a library
 library_name = "Central Library"
@@ -40,16 +49,9 @@ for book in books_in_library:
     print(f"- {book.title}")
 
 # Retrieve the librarian for a library
-library_name = "City Library"
-librarian = Librarian.objects.get(library__name=library_name)
-print(f"\nLibrarian of {library_name}: {librarian.name}")
-
-author_name = "Stephen King"
+library_name = "Central Library"
 try:
-    author = Author.objects.get(name=author_name)
-    books_by_author = Book.objects.filter(author=author)
-    print(f"Books by {author_name}:")
-    for book in books_by_author:
-        print(f"- {book.title}")
-except Author.DoesNotExist:
-    print(f"Author '{author_name}' not found.")
+    librarian = Librarian.objects.get(library=library1)
+    print(f"\nLibrarian for '{library_name}': {librarian.name}")
+except Librarian.DoesNotExist:
+    print(f"\nNo librarian found for '{library_name}'.")
