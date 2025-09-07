@@ -43,3 +43,13 @@ for book in books_in_library:
 library_name = "City Library"
 librarian = Librarian.objects.get(library__name=library_name)
 print(f"\nLibrarian of {library_name}: {librarian.name}")
+
+author_name = "Stephen King"
+try:
+    author = Author.objects.get(name=author_name)
+    books_by_author = Book.objects.filter(author=author)
+    print(f"Books by {author_name}:")
+    for book in books_by_author:
+        print(f"- {book.title}")
+except Author.DoesNotExist:
+    print(f"Author '{author_name}' not found.")
