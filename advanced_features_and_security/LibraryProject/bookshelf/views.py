@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView
 from .models import Book
 from .forms import BookForm
+from .forms import ExampleForm
 
 # Class-based view for listing books
 class BookListView(PermissionRequiredMixin, ListView):
@@ -49,3 +50,8 @@ def book_delete(request, pk):
         book.delete()
         return redirect('book_list')
     return render(request, 'bookshelf/book_confirm_delete.html', {'book': book})
+
+def form_example(request):
+    form = ExampleForm()
+    return render(request, "bookshelf/form_example.html", {"form": form})
+
