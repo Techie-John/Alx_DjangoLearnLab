@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
+from django.conf import settings
 
 class CustomUserManager(BaseUserManager):
     """
@@ -49,7 +50,7 @@ class Book(models.Model):
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
     # Add a foreign key to the custom user model
-    added_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.title} by {self.author}"
