@@ -2,6 +2,7 @@ from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend # Correct import for the filter backend
 from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 # Task 1 & 2: Generic Views for Book Model with Filtering/Searching
 # =================================================================
