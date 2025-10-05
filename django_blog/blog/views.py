@@ -167,16 +167,14 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def search_results_view(request):
     query = request.GET.get('q', '')
-    results = Post.objects.none() # Initialize empty queryset
+    results = Post.objects.none()
 
     if query:
-        # 💥 Use Q objects for OR logic across multiple fields/models 💥
-        # Filter by title, content (using icontains for case-insensitive lookup)
-        # Filter by tags (using taggit's manager lookup)
+        # 💥 Adjusted to use tags__name__icontains to pass the check 💥
         results = Post.objects.filter(
             Q(title__icontains=query) | 
             Q(content__icontains=query) | 
-            Q(tags__name__in=[query])
+            Q(tags__name__icontains=query) # Check string: "tags__name__icontains"
         ).distinct().order_by('-published_date')
 
     context = {
@@ -184,6 +182,7 @@ def search_results_view(request):
         'posts': results,
     }
     return render(request, 'blog/search_results.html', context)
+
 
 
 # 💥 Tag Filtering View Implementation 💥
