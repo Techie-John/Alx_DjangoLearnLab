@@ -76,7 +76,7 @@ class PostDetailView(DetailView):
 # CREATE: New Post (Requires login)
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content', 'tags'] # Uses default ModelForm fields
+    form_class = PostForm 
     template_name = 'blog/post_form.html'
 
     # Auto-set the author before saving the form
@@ -87,7 +87,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 # UPDATE: Edit Post (Requires login and must be the author)
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content', 'tags']
+    form_class = PostForm
     template_name = 'blog/post_form.html'
 
     # Auto-set the author before saving (needed for validation, although author won't change)

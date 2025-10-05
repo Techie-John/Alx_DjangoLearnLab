@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from .models import Post, Comment
+from taggit.forms import TagWidget 
 
 # Step 1: Extend UserCreationForm for registration
 class CustomUserCreationForm(UserCreationForm):
@@ -30,4 +31,12 @@ class CommentForm(forms.ModelForm):
         fields = ('content',)
         widgets = {
             'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Write your comment here...'}),
+        }
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags'] # 💥 Check string: "tags" 💥
+        widgets = {
+            'tags': TagWidget(), # 💥 Check string: "TagWidget()" 💥
         }
