@@ -185,14 +185,21 @@ def search_results_view(request):
 
 
 
-# 💥 Tag Filtering View Implementation 💥
-def post_by_tag_view(request, tag_slug):
-    # Fetch posts filtered by the given tag slug
-    posts = Post.objects.filter(tags__slug__in=[tag_slug]).order_by('-published_date')
-    tag_name = tag_slug.replace('-', ' ').title() # Simple conversion for display
+class PostByTagListView(ListView):
+    """Displays a list of posts filtered by a specific tag slug."""
+    model = Post
+    template_name = 'blog/tag_posts.html'
+    context_object_name = 'posts'
+    ordering = ['-published_date']
+    paginate_by = 5
 
-    context = {
-        'tag_name': tag_name,
-        'posts': posts,
-    }
-    return render(request, 'blog/tag_posts.html', context)
+    def get_queryset(self):
+        # Filter posts where tags__slug matches the slug from the URL
+        self.tag_slug = self.kwargs['tag_slug']
+        return Post.objects.filter(tags__slug=self.tag_slug).order_by('-published_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Pass the tag name to the template for display
+        context['tag_name'] = self.tag_slug.replace('-', ' ').title()
+        return context
