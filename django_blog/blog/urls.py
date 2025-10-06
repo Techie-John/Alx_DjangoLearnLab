@@ -4,21 +4,20 @@ from . import views
 from .views import (
     PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView,
     CommentCreateView, CommentUpdateView, CommentDeleteView,
-    search_results_view, post_by_tag_view,
+    search_results_view, PostByTagListView,
 )
 
 urlpatterns = [
     # Task 2/4 URLs (Post CRUD, Tagging, Search)
     path('', PostListView.as_view(), name='post_list'),
     
-    # 💥 Adjusted Post URLs to match checker strings 💥
     path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
     path('post/new/', PostCreateView.as_view(), name='post_create'),          # Check string: "post/new/"
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'), # Check string: "post/<int:pk>/update/"
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'), # Check string: "post/<int:pk>/delete/"
     
     path('search/', search_results_view, name='search_results'),
-    path('tags/<str:tag_slug>/', post_by_tag_view, name='posts_by_tag'),
+    path('tags/<str:tag_slug>/', PostByTagListView.as_view(), name='posts_by_tag'),
 
     # 💥 Adjusted Comment URLs to match checker strings 💥
     path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='comment_create'), # Check string: "post/<int:pk>/comments/new/"
